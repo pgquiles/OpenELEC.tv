@@ -17,12 +17,13 @@
 ################################################################################
 
 PKG_NAME="kodi-pvr-addons"
-PKG_VERSION="a0a437e"
+PKG_VERSION="928652c"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/opdenkamp/xbmc-pvr-addons"
 PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
+PKG_URL="http://amlinux.ru/source/$PKG_NAME-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_TARGET="toolchain curl kodi"
 PKG_PRIORITY="optional"
 PKG_SECTION="mediacenter"
