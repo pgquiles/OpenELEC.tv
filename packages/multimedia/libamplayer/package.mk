@@ -17,14 +17,12 @@
 ################################################################################
 
 PKG_NAME="libamplayer"
-PKG_VERSION="75f23da"
-#PKG_VERSION="m8"
+PKG_VERSION="5cb185c"
 PKG_REV="1"
 PKG_ARCH="arm"
 PKG_LICENSE="other"
 PKG_SITE="http://www.amlogic.com"
-PKG_URL="https://dl.dropboxusercontent.com/u/18902170/$PKG_NAME-$PKG_VERSION.tar.xz"
-#PKG_URL="http://amlinux.ru/source/$PKG_NAME-$PKG_VERSION.tar.gz"
+PKG_URL="http://amlinux.ru/source/$PKG_NAME-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_TARGET="toolchain alsa-lib ffmpeg"
 PKG_PRIORITY="optional"
 PKG_SECTION="multimedia"
