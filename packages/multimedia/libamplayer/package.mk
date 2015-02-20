@@ -17,7 +17,7 @@
 ################################################################################
 
 PKG_NAME="libamplayer"
-PKG_VERSION="5cb185c"
+PKG_VERSION="269b07c"
 PKG_REV="1"
 PKG_ARCH="arm"
 PKG_LICENSE="other"
