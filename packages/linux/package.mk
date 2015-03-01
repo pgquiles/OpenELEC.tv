@@ -19,7 +19,7 @@
 PKG_NAME="linux"
 case "$LINUX" in
   amlogic)
-    PKG_VERSION="amlogic-3.10-fa4c242"
+    PKG_VERSION="amlogic-3.10-24553c6"
     PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
     ;;
   imx6)
@@ -27,7 +27,7 @@ case "$LINUX" in
     PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
     ;;
   *)
-    PKG_VERSION="3.18.4"
+    PKG_VERSION="3.19"
     PKG_URL="http://www.kernel.org/pub/linux/kernel/v3.x/$PKG_NAME-$PKG_VERSION.tar.xz"
     ;;
 esac
@@ -203,15 +203,6 @@ makeinstall_target() {
     for dtb in arch/arm/boot/dts/*.dtb; do
       cp $dtb $INSTALL/usr/share/bootloader 2>/dev/null || :
     done
-  fi
-
-  if [ "$PERF_SUPPORT" = "yes" -a "$DEVTOOLS" = "yes" ]; then
-    mkdir -p $INSTALL/usr/bin
-      cp -P tools/perf/perf $INSTALL/usr/bin/
-
-    mkdir -p $INSTALL/usr/libexec/perf-core/scripts/python/
-      cp -P tools/perf/perf-archive $INSTALL/usr/libexec/perf-core/
-      cp -rP tools/perf/scripts/python/* $INSTALL/usr/libexec/perf-core/scripts/python/
   fi
 }
 
