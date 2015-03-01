@@ -210,6 +210,9 @@ post_install() {
   add_user nobody x 999 999 "Nobody" "/" "/bin/sh"
   add_group nobody 999
 
+  add_user nobody x 65534 65534 "Nobody" "/" "/bin/sh"
+  add_group nogroup 65534
+
   enable_service debug-shell.service
   enable_service shell.service
   enable_service show-version.service
