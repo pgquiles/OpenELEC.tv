@@ -245,13 +245,13 @@ index e73df57..1029cdf 100644
  /*
   * These are system power hooks to implement power down policy
   * pls add rule and policy notes 
-@@ -73,7 +74,8 @@
- 
+@@ -72,7 +73,8 @@
  void meson_power_off(void)
  {
--        meson_common_restart('h', "poweroff");
-+        //meson_common_restart('h', "poweroff");
-+        meson_pm_poweroff();
+ 	printk("meson power off \n");
+-	meson_common_restart('h',"charging_reboot");
++	//meson_common_restart('h',"charging_reboot");
++	meson_pm_poweroff();
  }
  
  void meson_power_idle(void)
