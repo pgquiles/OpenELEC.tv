@@ -22,7 +22,7 @@ case "$LINUX" in
     LINUX_VERSION="3.10-24553c6"
     PKG_VERSION="amlogic-$LINUX_VERSION"
     PKG_URL="https://github.com/codesnake/linux-amlogic/releases/download/$LINUX_VERSION/$PKG_NAME-$PKG_VERSION.tar.xz"
-    LINUX_VERSION="b7def41"
+    LINUX_VERSION="2357b9f"
     PKG_VERSION="amlogic-$LINUX_VERSION"
     PKG_URL="http://amlinux.ru/source/$PKG_NAME-$PKG_VERSION.tar.gz"
     ;;
