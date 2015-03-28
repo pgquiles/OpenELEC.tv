@@ -1,0 +1,69 @@
+commit 995536d7ebb42f66073ff5e3ddd2a2477bc83472
+Author: kszaq <kszaquitto@gmail.com>
+Date:   Wed Mar 25 23:53:13 2015 +0100
+
+    [aml] Set digital_codec parameter to notify HDMI about passthrough audio format
+
+diff --git a/xbmc/cores/dvdplayer/DVDCodecs/Audio/DVDAudioCodecPassthrough.cpp b/xbmc/cores/dvdplayer/DVDCodecs/Audio/DVDAudioCodecPassthrough.cpp
+index 79b4e6e..6ff0fe4 100644
+--- a/xbmc/cores/dvdplayer/DVDCodecs/Audio/DVDAudioCodecPassthrough.cpp
++++ b/xbmc/cores/dvdplayer/DVDCodecs/Audio/DVDAudioCodecPassthrough.cpp
+@@ -23,6 +23,7 @@
+ #include "DVDStreamInfo.h"
+ #include "cores/AudioEngine/Utils/AEUtil.h"
+ #include "settings/Settings.h"
++#include "utils/AMLUtils.h"
+ #include "utils/log.h"
+ 
+ #include "cores/AudioEngine/AEFactory.h"
+@@ -58,6 +59,38 @@ bool CDVDAudioCodecPassthrough::Open(CDVDStreamInfo &hints, CDVDCodecOptions &op
+       (hints.codec == AV_CODEC_ID_DTS && bSupportsDTSOut) ||
+       (hints.codec == AV_CODEC_ID_TRUEHD && bSupportsTrueHDOut))
+   {
++#if defined(HAS_LIBAMCODEC)
++    int aml_digital_codec;
++    switch(hints.codec)
++    {
++      case AV_CODEC_ID_AC3:
++        aml_digital_codec = 2;
++        break;
++
++      case AV_CODEC_ID_DTS:
++        if (bSupportsDTSHDOut)
++          aml_digital_codec = 5;
++        else
++          aml_digital_codec = 3;
++        break;
++
++      case AV_CODEC_ID_EAC3:
++        aml_digital_codec = 4;
++        break;
++
++      case AV_CODEC_ID_TRUEHD:
++        aml_digital_codec = 7;
++        break;
++
++/*    case AV_CODEC_ID_DTSHD:
++        aml_digital_codec = 5;
++        break;
++*/
++      default:
++        aml_digital_codec = 0;
++    }
++    aml_set_sysfs_int("/sys/class/audiodsp/digital_codec", aml_digital_codec);
++#endif
+     return true;
+   }
+ 
+@@ -125,6 +158,11 @@ void CDVDAudioCodecPassthrough::Dispose()
+   }
+ 
+   m_bufferSize = 0;
++
++#if defined(HAS_LIBAMCODEC)
++  // Reset to multichannel PCM
++  aml_set_sysfs_int("/sys/class/audiodsp/digital_codec", 6);
++#endif
+ }
+ 
+ int CDVDAudioCodecPassthrough::Decode(uint8_t* pData, int iSize)
