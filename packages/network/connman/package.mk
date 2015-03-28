@@ -111,6 +111,9 @@ post_makeinstall_target() {
 
   mkdir -p $INSTALL/usr/config
     cp $PKG_DIR/config/hosts.conf $INSTALL/usr/config
+
+  mkdir -p $INSTALL/usr/lib/connman
+      cp $PKG_DIR/config/settings $INSTALL/usr/lib/connman
 }
 
 post_install() {

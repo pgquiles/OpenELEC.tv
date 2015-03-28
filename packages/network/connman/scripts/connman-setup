@@ -17,6 +17,11 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
+# set variable for connman settings location
+  if [ ! -f /storage/.cache/connman/settings ]; then
+    cp -f /usr/lib/connman/settings /storage/.cache/connman/
+  fi
+
 # set variable for connman main.conf location
   if [ -f /storage/.config/connman_main.conf ]; then
     export CONNMAN_MAIN="--config=/storage/.config/connman_main.conf"
