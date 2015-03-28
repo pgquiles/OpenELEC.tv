@@ -355,4 +355,4 @@
   AMREMOTE_SUPPORT="yes"
 
 # Hardware random number generator daemon
-HW_RNG="yes"
+# HW_RNG="yes"
