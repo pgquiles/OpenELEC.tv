@@ -1,7 +1,7 @@
 diff -Nru a/update b/update
 --- a/update	1970-01-01 03:00:00.000000000 +0300
 +++ b/update	2014-12-29 09:19:53.768905850 +0300
-@@ -0,0 +1,25 @@
+@@ -0,0 +1,24 @@
 +#!/bin/sh
 +
 +IMAGE="/tmp/cache/update.zip"
@@ -11,7 +11,6 @@ diff -Nru a/update b/update
 +mount -t ext4 /dev/cache /tmp/cache
 +
 +wget $source -O /tmp/cache/update.zip
-+unzip /tmp/cache/update.zip recovery.img -d /tmp/cache/
 +sync
 +
 +if [ ! -f "${IMAGE}" ]; then
