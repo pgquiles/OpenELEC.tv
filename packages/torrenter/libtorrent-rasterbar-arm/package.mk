@@ -16,18 +16,23 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="oem"
-PKG_VERSION=""
+PKG_NAME="libtorrent-rasterbar-arm"
+PKG_VERSION="1.0.3"
 PKG_REV="1"
 PKG_ARCH="any"
-PKG_LICENSE="various"
-PKG_SITE="http://www.openelec.tv"
-PKG_URL=""
-PKG_DEPENDS_TARGET="toolchain slang mc unzip unrar recovery_reboot libtorrent-rasterbar-arm"
+PKG_LICENSE="LGPL"
+PKG_SITE="http://www.rasterbar.com/"
+PKG_URL="https://www.oneevil.ru/sources/$PKG_NAME-$PKG_VERSION.tar.gz"
+PKG_DEPENDS_TARGET="toolchain"
 PKG_PRIORITY="optional"
-PKG_SECTION="virtual"
-PKG_SHORTDESC="OEM: Metapackage for various OEM packages"
-PKG_LONGDESC="OEM: Metapackage for various OEM packages"
-
+PKG_SECTION="torrenter"
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="no"
+
+make_target() {
+  : # nothing todo
+}
+
+makeinstall_target() {
+  DESTDIR=$INSTALL ./install
+}
