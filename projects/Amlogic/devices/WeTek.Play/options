@@ -2,7 +2,19 @@
   KERNEL_UBOOT_TARGET="uImage-dtb"
 
 # Kernel extra targets to build
-  KERNEL_UBOOT_EXTRA_TARGET="meson6_g18.dtd"
+  KERNEL_UBOOT_EXTRA_TARGET="wetek_play.dtd"
 
 # OpenGL-ES implementation to use (no / bcm2835-driver / opengl-meson6 / opengl-meson8)
   OPENGLES="opengl-meson6"
+
+# additional Firmware to use (dvb-firmware, misc-firmware, wlan-firmware)
+# Space separated list is supported,
+# e.g. FIRMWARE="dvb-firmware misc-firmware wlan-firmware"
+  FIRMWARE="misc-firmware wlan-firmware dvb-firmware brcmfmac_sdio-firmware"
+
+# Addon Server Url
+  ADDON_SERVER_URL="http://addons.openelec.tv"
+
+# set the addon dirs
+  ADDON_PATH="$ADDON_VERSION/WeTek_Play/$TARGET_ARCH"
+  ADDON_URL="$ADDON_SERVER_URL/$ADDON_PATH"
