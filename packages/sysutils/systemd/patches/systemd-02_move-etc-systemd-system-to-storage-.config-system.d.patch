@@ -1,7 +1,7 @@
-From 3bda4f376063971ad068f9c26edbec9029cfa7e6 Mon Sep 17 00:00:00 2001
+From 56daac6a053159bbc5dc22d85c6ecd66b7369aae Mon Sep 17 00:00:00 2001
 From: Stefan Saraev <stefan@saraev.ca>
 Date: Thu, 19 Dec 2013 11:21:13 +0200
-Subject: [PATCH] move /etc/systemd/system to /storage/.config/system.d
+Subject: [PATCH 2/8] move /etc/systemd/system to /storage/.config/system.d
 
 ---
  Makefile.am |    4 ++--
@@ -9,10 +9,10 @@ Subject: [PATCH] move /etc/systemd/system to /storage/.config/system.d
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 8d9c587..93e9c6d 100644
+index bf04d31..36c269e 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -144,7 +144,7 @@ udevlibexec_PROGRAMS =
+@@ -166,7 +166,7 @@ udevlibexec_PROGRAMS =
  AM_CPPFLAGS = \
  	-include $(top_builddir)/config.h \
  	-DPKGSYSCONFDIR=\"$(pkgsysconfdir)\" \
@@ -21,7 +21,7 @@ index 8d9c587..93e9c6d 100644
  	-DSYSTEM_DATA_UNIT_PATH=\"$(systemunitdir)\" \
  	-DSYSTEM_SYSVINIT_PATH=\"$(SYSTEM_SYSVINIT_PATH)\" \
  	-DSYSTEM_SYSVRCND_PATH=\"$(SYSTEM_SYSVRCND_PATH)\" \
-@@ -4209,7 +4209,7 @@ substitutions = \
+@@ -6210,7 +6210,7 @@ substitutions = \
         '|SYSTEMCTL=$(rootbindir)/systemctl|' \
         '|SYSTEMD_NOTIFY=$(rootbindir)/systemd-notify|' \
         '|pkgsysconfdir=$(pkgsysconfdir)|' \
@@ -31,10 +31,10 @@ index 8d9c587..93e9c6d 100644
         '|pkgdatadir=$(pkgdatadir)|' \
         '|systemunitdir=$(systemunitdir)|' \
 diff --git a/Makefile.in b/Makefile.in
-index 6f3d475..66c4c22 100644
+index 49f9f2b..1e68a20 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -3744,7 +3744,7 @@ manual_tests = test-engine test-ns test-loopback test-hostname \
+@@ -5786,7 +5786,7 @@ PY_LOG_COMPILER = $(PYTHON)
  AM_CPPFLAGS = \
  	-include $(top_builddir)/config.h \
  	-DPKGSYSCONFDIR=\"$(pkgsysconfdir)\" \
@@ -43,7 +43,7 @@ index 6f3d475..66c4c22 100644
  	-DSYSTEM_DATA_UNIT_PATH=\"$(systemunitdir)\" \
  	-DSYSTEM_SYSVINIT_PATH=\"$(SYSTEM_SYSVINIT_PATH)\" \
  	-DSYSTEM_SYSVRCND_PATH=\"$(SYSTEM_SYSVRCND_PATH)\" \
-@@ -6269,7 +6269,7 @@ substitutions = \
+@@ -9524,7 +9524,7 @@ substitutions = \
         '|SYSTEMCTL=$(rootbindir)/systemctl|' \
         '|SYSTEMD_NOTIFY=$(rootbindir)/systemd-notify|' \
         '|pkgsysconfdir=$(pkgsysconfdir)|' \
@@ -53,5 +53,5 @@ index 6f3d475..66c4c22 100644
         '|pkgdatadir=$(pkgdatadir)|' \
         '|systemunitdir=$(systemunitdir)|' \
 -- 
-1.7.2.5
+1.7.10.4
 
