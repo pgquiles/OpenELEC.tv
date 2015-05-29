@@ -19,8 +19,7 @@
 PKG_NAME="linux"
 case "$LINUX" in
   amlogic)
-#    LINUX_VERSION="bfe5fe5" #llp
-    LINUX_VERSION="5f3c177" #gmac
+    LINUX_VERSION="12556b2"
     PKG_VERSION="amlogic-$LINUX_VERSION"
     PKG_URL="http://amlinux.ru/source/$PKG_NAME-$PKG_VERSION.tar.gz"
     ;;
