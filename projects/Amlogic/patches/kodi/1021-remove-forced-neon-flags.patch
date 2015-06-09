@@ -1,0 +1,26 @@
+From 42e7194015c87f0c187b2fff9264a269d0ec7a57 Mon Sep 17 00:00:00 2001
+From: Javier Marcet <javier@marcet.info>
+Date: Mon, 4 May 2015 16:09:11 +0200
+Subject: [PATCH] [system] remove forced neon cflags
+
+Signed-off-by: Javier Marcet <javier@marcet.info>
+---
+ configure.ac | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index f5ffe51..65bcf2d 100644
+--- a/configure.in
++++ b/configure.in
+@@ -866,11 +866,6 @@ elif test "$use_arch" = "arm"; then
+       [ CFLAGS="$SAVE_CFLAGS -Wa,-march=armv6 -mtune=cortex-a8 -mthumb-interwork"
+         CXXFLAGS="$CXXFLAGS -Wa,-march=armv6 -mtune=cortex-a8 -mthumb-interwork"    
+         use_cpu=cortex-a8])
+-  else
+-    if test "$use_neon" = "yes"; then 
+-      CFLAGS="$CFLAGS -mfpu=neon -mvectorize-with-neon-quad"
+-      CXXFLAGS="$CXXFLAGS -mfpu=neon -mvectorize-with-neon-quad"
+-    fi
+   fi
+ fi
+ 

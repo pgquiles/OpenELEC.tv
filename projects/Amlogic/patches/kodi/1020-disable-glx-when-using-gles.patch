@@ -1,0 +1,37 @@
+From 0c058bde808f11c28ba4e2576120376388d3bf2b Mon Sep 17 00:00:00 2001
+From: Javier Marcet <javier@marcet.info>
+Date: Sat, 14 Mar 2015 13:06:52 +0100
+Subject: [PATCH] [system] disable GLX when using GLES
+
+Signed-off-by: Javier Marcet <javier@marcet.info>
+---
+ xbmc/system.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/xbmc/system.h b/xbmc/system.h
+index 157b3b5..4bfe680 100644
+--- a/xbmc/system.h
++++ b/xbmc/system.h
+@@ -222,6 +222,7 @@
+ 
+ // EGL detected. Dont use GLX!
+ #ifdef HAVE_LIBEGL
++#undef HAS_GL
+ #undef HAS_GLX
+ #define HAS_EGL
+ #endif
+@@ -229,12 +230,14 @@
+ // GLES2.0 detected. Dont use GL!
+ #ifdef HAVE_LIBGLESV2
+ #undef HAS_GL
++#undef HAS_GLX
+ #define HAS_GLES 2
+ #endif
+ 
+ // GLES1.0 detected. Dont use GL!
+ #ifdef HAVE_LIBGLES
+ #undef HAS_GL
++#undef HAS_GLX
+ #define HAS_GLES 1
+ #endif
+ 

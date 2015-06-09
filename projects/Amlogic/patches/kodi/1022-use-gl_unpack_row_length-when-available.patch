@@ -1,0 +1,111 @@
+From b58c6bcd9893b3dcd226471b15abe3999b1fa364 Mon Sep 17 00:00:00 2001
+From: "Chris \"koying\" Browet" <cbro@semperpax.com>
+Date: Thu, 15 Jan 2015 15:53:16 +0100
+Subject: [PATCH] FIX: [egl] use GL_UNPACK_ROW_LENGTH_EXT if available
+
+---
+ xbmc/cores/VideoRenderers/LinuxRendererGLES.cpp | 25 +++++++++++++++++++------
+ xbmc/rendering/RenderSystem.cpp                 |  5 +++++
+ xbmc/rendering/RenderSystem.h                   |  4 +++-
+ xbmc/rendering/gles/RenderSystemGLES.cpp        |  4 ++++
+ 4 files changed, 31 insertions(+), 7 deletions(-)
+
+diff --git a/xbmc/cores/VideoRenderers/LinuxRendererGLES.cpp b/xbmc/cores/VideoRenderers/LinuxRendererGLES.cpp
+index 2b64121..0605d8b 100644
+--- a/xbmc/cores/VideoRenderers/LinuxRendererGLES.cpp
++++ b/xbmc/cores/VideoRenderers/LinuxRendererGLES.cpp
+@@ -94,6 +94,10 @@ static PFNEGLCLIENTWAITSYNCKHRPROC eglClientWaitSyncKHR;
+ #include "DVDCodecs/Video/DVDVideoCodecAndroidMediaCodec.h"
+ #endif
+ 
++#ifndef GL_UNPACK_ROW_LENGTH_EXT
++#define GL_UNPACK_ROW_LENGTH_EXT 0x0CF2
++#endif
++
+ using namespace Shaders;
+ 
+ CLinuxRendererGLES::YUVBUFFER::YUVBUFFER()
+@@ -448,15 +452,24 @@ void CLinuxRendererGLES::LoadPlane( YUVPLANE& plane, int type, unsigned flipinde
+ 
+   glBindTexture(m_textureTarget, plane.id);
+ 
+-  // OpenGL ES does not support strided texture input.
+   if(stride != width * bps)
+   {
+-    unsigned char* src = (unsigned char*)data;
+-    for (unsigned int y = 0; y < height;++y, src += stride)
+-      glTexSubImage2D(m_textureTarget, 0, 0, y, width, 1, type, datatype, src);
+-  } else {
+-    glTexSubImage2D(m_textureTarget, 0, 0, 0, width, height, type, datatype, pixelData);
++    if (g_Windowing.SupportsEGLSubimage())
++    {
++      glPixelStorei(GL_UNPACK_ROW_LENGTH_EXT, stride / bps);
++      glTexSubImage2D(m_textureTarget, 0, 0, 0, width, height, type, datatype, pixelData);
++      glPixelStorei(GL_UNPACK_ROW_LENGTH_EXT, 0);
++    }
++    else
++    {
++      // OpenGL ES does not support strided texture input.
++      unsigned char* src = (unsigned char*)data;
++      for (unsigned int y = 0; y < height;++y, src += stride)
++        glTexSubImage2D(m_textureTarget, 0, 0, y, width, 1, type, datatype, src);
++    }
+   }
++  else
++    glTexSubImage2D(m_textureTarget, 0, 0, 0, width, height, type, datatype, pixelData);
+ 
+   /* check if we need to load any border pixels */
+   if(height < plane.texheight)
+diff --git a/xbmc/rendering/RenderSystem.cpp b/xbmc/rendering/RenderSystem.cpp
+index 64e0d16..feba098 100644
+--- a/xbmc/rendering/RenderSystem.cpp
++++ b/xbmc/rendering/RenderSystem.cpp
+@@ -67,6 +67,11 @@ bool CRenderSystemBase::SupportsBGRAApple() const
+   return (m_renderCaps & RENDER_CAPS_BGRA_APPLE) == RENDER_CAPS_BGRA_APPLE;
+ }
+ 
++bool CRenderSystemBase::SupportsEGLSubimage() const
++{
++  return (m_renderCaps & RENDER_CAPS_EGL_SUBIMAGE) == RENDER_CAPS_EGL_SUBIMAGE;
++}
++
+ bool CRenderSystemBase::SupportsStereo(RENDER_STEREO_MODE mode) const
+ {
+   switch(mode)
+diff --git a/xbmc/rendering/RenderSystem.h b/xbmc/rendering/RenderSystem.h
+index 9f1daf4..28157f3 100644
+--- a/xbmc/rendering/RenderSystem.h
++++ b/xbmc/rendering/RenderSystem.h
+@@ -50,7 +50,8 @@ enum
+   RENDER_CAPS_NPOT     = (1 << 1),
+   RENDER_CAPS_DXT_NPOT = (1 << 2),
+   RENDER_CAPS_BGRA     = (1 << 3),
+-  RENDER_CAPS_BGRA_APPLE = (1 << 4)
++  RENDER_CAPS_BGRA_APPLE = (1 << 4),
++  RENDER_CAPS_EGL_SUBIMAGE = (1 << 5)
+ };
+ 
+ enum
+@@ -144,6 +145,7 @@ class CRenderSystemBase
+   bool SupportsBGRA() const;
+   bool SupportsBGRAApple() const;
+   bool SupportsNPOT(bool dxt) const;
++  bool SupportsEGLSubimage() const;
+   bool SupportsStereo(RENDER_STEREO_MODE mode) const;
+   unsigned int GetMaxTextureSize() const { return m_maxTextureSize; }
+   unsigned int GetMinDXTPitch() const { return m_minDXTPitch; }
+diff --git a/xbmc/rendering/gles/RenderSystemGLES.cpp b/xbmc/rendering/gles/RenderSystemGLES.cpp
+index 8f12332..87b305f 100644
+--- a/xbmc/rendering/gles/RenderSystemGLES.cpp
++++ b/xbmc/rendering/gles/RenderSystemGLES.cpp
+@@ -117,6 +117,10 @@ bool CRenderSystemGLES::InitRenderSystem()
+     m_renderCaps |= RENDER_CAPS_BGRA_APPLE;
+   }
+ 
++  if (IsExtSupported("GL_EXT_unpack_subimage"))
++  {
++    m_renderCaps |= RENDER_CAPS_EGL_SUBIMAGE;
++  }
+ 
+ 
+   m_bRenderCreated = true;
