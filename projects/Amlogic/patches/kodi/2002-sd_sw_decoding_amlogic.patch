@@ -1,0 +1,139 @@
+diff -Nru kodi-14-7cc53a9.orig/language/English/strings.po kodi-14-7cc53a9.patch/language/English/strings.po
+--- kodi-14-7cc53a9.orig/language/English/strings.po	2015-06-13 22:09:03.639278087 +0300
++++ kodi-14-7cc53a9.patch/language/English/strings.po	2015-06-13 22:33:18.156515452 +0300
+@@ -16125,4 +16125,20 @@
+ #: system/settings/settings.xml
+ msgctxt "#60002"
+ msgid "Use software decoding for Standard Definition video content (< 720p)"
+-msgstr ""
+\ No newline at end of file
++msgstr ""
++
++#: system/settings/settings.xml
++msgctxt "#60003"
++msgid "Use software decoding for MPEG2 (SD) video content"
++msgstr ""
++
++#: system/settings/settings.xml
++msgctxt "#60004"
++msgid "Use software decoding for H.264 (SD) video content"
++msgstr ""
++
++#: system/settings/settings.xml
++msgctxt "#60005"
++msgid "Use software decoding for MPEG4 (SD) video content"
++msgstr ""
++
+diff -Nru kodi-14-7cc53a9.orig/language/Russian/strings.po kodi-14-7cc53a9.patch/language/Russian/strings.po
+--- kodi-14-7cc53a9.orig/language/Russian/strings.po	2015-06-13 22:09:03.639278087 +0300
++++ kodi-14-7cc53a9.patch/language/Russian/strings.po	2015-06-13 22:32:39.244588214 +0300
+@@ -13090,3 +13090,18 @@
+ msgctxt "#60002"
+ msgid "Use software decoding for Standard Definition video content (< 720p)"
+ msgstr "Использовать программное декодирование для видео контента с разрешением < 720"
++
++#: system/settings/settings.xml
++msgctxt "#60003"
++msgid "Use software decoding for MPEG2 (SD) video content"
++msgstr "Использовать програмное декодирование для MPEG2 (SD) видео"
++
++#: system/settings/settings.xml
++msgctxt "#60004"
++msgid "Use software decoding for H.264 (SD) video content"
++msgstr "Использовать програмное декодирование для H.264 (SD) видео"
++
++#: system/settings/settings.xml
++msgctxt "#60005"
++msgid "Use software decoding for MPEG4 (SD) video content"
++msgstr "Использовать програмное декодирование для MPEG4 (SD) видео"
+diff -Nru kodi-14-7cc53a9.orig/system/settings/settings.xml kodi-14-7cc53a9.patch/system/settings/settings.xml
+--- kodi-14-7cc53a9.orig/system/settings/settings.xml	2015-06-13 22:09:03.639278087 +0300
++++ kodi-14-7cc53a9.patch/system/settings/settings.xml	2015-06-13 22:35:40.680248876 +0300
+@@ -612,6 +612,45 @@
+           </updates>
+           <control type="toggle" />
+         </setting>        
++        <setting id="videoplayer.useswdecodingformpeg2sd" type="boolean" label="60003">
++          <requirement>HAVE_AMCODEC</requirement>
++          <dependencies>
++            <dependency type="enable" setting="videoplayer.useswdecodingforsd">false</dependency>
++            <dependency type="enable" setting="videoplayer.decodingmethod" operator="is">1</dependency>
++          </dependencies>
++          <level>3</level>
++          <default>false</default>
++          <updates>
++            <update type="change" />
++          </updates>
++          <control type="toggle" />
++        </setting>
++        <setting id="videoplayer.useswdecodingforh264sd" type="boolean" label="60004">
++          <requirement>HAVE_AMCODEC</requirement>
++          <dependencies>
++            <dependency type="enable" setting="videoplayer.useswdecodingforsd">false</dependency>
++            <dependency type="enable" setting="videoplayer.decodingmethod" operator="is">1</dependency>
++          </dependencies>
++          <level>3</level>
++          <default>false</default>
++          <updates>
++            <update type="change" />
++          </updates>
++          <control type="toggle" />
++        </setting>
++        <setting id="videoplayer.useswdecodingformpeg4sd" type="boolean" label="60005">
++          <requirement>HAVE_AMCODEC</requirement>
++          <dependencies>
++            <dependency type="enable" setting="videoplayer.useswdecodingforsd">false</dependency>
++            <dependency type="enable" setting="videoplayer.decodingmethod" operator="is">1</dependency>
++          </dependencies>
++          <level>3</level>
++          <default>false</default>
++          <updates>
++            <update type="change" />
++          </updates>
++          <control type="toggle" />
++        </setting>
+         <setting id="videoplayer.usevdpau" type="boolean" label="13425" help="36155">
+           <requirement>HAVE_LIBVDPAU</requirement>
+           <dependencies>
+diff -Nru kodi-14-7cc53a9.orig/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp kodi-14-7cc53a9.patch/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp
+--- kodi-14-7cc53a9.orig/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp	2015-06-13 22:09:03.639278087 +0300
++++ kodi-14-7cc53a9.patch/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp	2015-06-13 22:28:50.929014972 +0300
+@@ -76,6 +76,12 @@
+     case AV_CODEC_ID_MPEG1VIDEO:
+     case AV_CODEC_ID_MPEG2VIDEO:
+     case AV_CODEC_ID_MPEG2VIDEO_XVMC:
++     if ((EDECODEMETHOD)CSettings::Get().GetInt("videoplayer.decodingmethod") == VS_DECODEMETHOD_HARDWARE && CSettings::Get().GetBool("videoplayer.useswdecodingformpeg2sd") && m_hints.width < 1280)
++     {
++       CLog::Log(LOGDEBUG, "use SW decoding for MPEG2 codec");
++        return false;
++        break;
++      }
+       m_mpeg2_sequence_pts = 0;
+       m_mpeg2_sequence = new mpeg2_sequence;
+       m_mpeg2_sequence->width  = m_hints.width;
+@@ -88,6 +94,12 @@
+       m_pFormatName = "am-mpeg2";
+       break;
+     case AV_CODEC_ID_H264:
++     if ((EDECODEMETHOD)CSettings::Get().GetInt("videoplayer.decodingmethod") == VS_DECODEMETHOD_HARDWARE && CSettings::Get().GetBool("videoplayer.useswdecodingforhs64sd") && m_hints.width < 1280)
++     {
++       CLog::Log(LOGDEBUG, "use SW decoding for H.264 codec");
++        return false;
++        break;
++      }
+       m_pFormatName = "am-h264";
+       // convert h264-avcC to h264-annex-b as h264-avcC
+       // under streamers can have issues when seeking.
+@@ -107,6 +119,12 @@
+     case AV_CODEC_ID_MPEG4:
+     case AV_CODEC_ID_MSMPEG4V2:
+     case AV_CODEC_ID_MSMPEG4V3:
++     if ((EDECODEMETHOD)CSettings::Get().GetInt("videoplayer.decodingmethod") == VS_DECODEMETHOD_HARDWARE && CSettings::Get().GetBool("videoplayer.useswdecodingformpeg4sd") && m_hints.width < 1280)
++     {
++       CLog::Log(LOGDEBUG, "use SW decoding for MPEG4 codec");
++        return false;
++        break;
++      }
+       m_pFormatName = "am-mpeg4";
+       break;
+     case AV_CODEC_ID_H263:
