@@ -1,0 +1,26 @@
+From fbe4676163085d8f0bb34a10bff8609ef3823d7e Mon Sep 17 00:00:00 2001
+From: Trent Nelson <trent.a.b.nelson@gmail.com>
+Date: Thu, 30 Jan 2014 18:52:29 -0700
+Subject: [PATCH 20/61] [AMLUtils] Don't assume base 16 when reading ints from
+ sysfs.
+
+---
+ xbmc/utils/AMLUtils.cpp |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/xbmc/utils/AMLUtils.cpp b/xbmc/utils/AMLUtils.cpp
+index 8421351..72dfb28 100644
+--- a/xbmc/utils/AMLUtils.cpp
++++ b/xbmc/utils/AMLUtils.cpp
+@@ -85,7 +85,7 @@ int aml_get_sysfs_int(const char *path)
+   {
+     char bcmd[16];
+     read(fd, bcmd, sizeof(bcmd));
+-    val = strtol(bcmd, NULL, 16);
++    val = strtol(bcmd, NULL, 0);
+     close(fd);
+   }
+   return val;
+-- 
+1.7.10.4
+

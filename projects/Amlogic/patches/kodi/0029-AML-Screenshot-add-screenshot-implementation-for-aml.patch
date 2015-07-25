@@ -1,24 +1,24 @@
-From 874627dbf19a29db6f4c48e6758e2bf2037135c4 Mon Sep 17 00:00:00 2001
+From 70ad3a3ed0d93da480b6843046d6eef3508ba11f Mon Sep 17 00:00:00 2001
 From: Memphiz <memphis@machzwo.de>
 Date: Mon, 26 Jan 2015 22:43:28 +0100
-Subject: [PATCH 1/2] [AML/Screenshot] - add screenshot implementation for aml
- platforms - based on the amvideocap driver (needs amlogic kernel with
- amvideocap support)
+Subject: [PATCH 29/32] [AML/Screenshot] - add screenshot implementation for
+ aml platforms - based on the amvideocap driver (needs
+ amlogic kernel with amvideocap support)
 
 ---
- xbmc/utils/Makefile.in       |  4 ++
- xbmc/utils/Screenshot.cpp    |  9 +++++
- xbmc/utils/ScreenshotAML.cpp | 95 ++++++++++++++++++++++++++++++++++++++++++++
- xbmc/utils/ScreenshotAML.h   | 30 ++++++++++++++
+ xbmc/utils/Makefile.in       |    4 ++
+ xbmc/utils/Screenshot.cpp    |    9 ++++
+ xbmc/utils/ScreenshotAML.cpp |   95 ++++++++++++++++++++++++++++++++++++++++++
+ xbmc/utils/ScreenshotAML.h   |   30 +++++++++++++
  4 files changed, 138 insertions(+)
  create mode 100644 xbmc/utils/ScreenshotAML.cpp
  create mode 100644 xbmc/utils/ScreenshotAML.h
 
 diff --git a/xbmc/utils/Makefile.in b/xbmc/utils/Makefile.in
-index 2d89fcd..c5f229b 100644
+index e203447..953e462 100644
 --- a/xbmc/utils/Makefile.in
 +++ b/xbmc/utils/Makefile.in
-@@ -85,6 +85,10 @@ ifeq (@USE_OPENGLES@,1)
+@@ -84,6 +84,10 @@ ifeq (@USE_OPENGLES@,1)
  SRCS += AMLUtils.cpp
  endif
  
@@ -193,55 +193,6 @@ index 0000000..b2caedc
 +    static void CaptureVideoFrame(unsigned char *buffer, int iWidth, int iHeight, bool bBlendToBuffer = true);
 +};
 +#endif//HAS_LIBAMCODEC
+-- 
+1.7.10.4
 
-From e9dda93eba76091351ad16032ca20078d4ddc096 Mon Sep 17 00:00:00 2001
-From: Memphiz <memphis@machzwo.de>
-Date: Tue, 27 Jan 2015 00:05:36 +0100
-Subject: [PATCH 2/2] [AML/videobookmark] - use the CScreenshotAML class for
- generating video bookmarks on amlogic
-
----
- xbmc/video/dialogs/GUIDialogVideoBookmarks.cpp | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/xbmc/video/dialogs/GUIDialogVideoBookmarks.cpp b/xbmc/video/dialogs/GUIDialogVideoBookmarks.cpp
-index c77955c..00139c8 100644
---- a/xbmc/video/dialogs/GUIDialogVideoBookmarks.cpp
-+++ b/xbmc/video/dialogs/GUIDialogVideoBookmarks.cpp
-@@ -25,7 +25,10 @@
- #ifdef HAS_VIDEO_PLAYBACK
- #include "cores/VideoRenderers/RenderManager.h"
- #include "cores/VideoRenderers/RenderCapture.h"
--#endif
-+#if defined(HAS_LIBAMCODEC)
-+#include "utils/ScreenshotAML.h"
-+#endif//HAS_LIBAMCODEC
-+#endif//HAS_VIDEO_PLAYBACK
- #include "pictures/Picture.h"
- #include "dialogs/GUIDialogContextMenu.h"
- #include "view/ViewState.h"
-@@ -339,8 +342,13 @@ bool CGUIDialogVideoBookmarks::AddBookmark(CVideoInfoTag* tag)
-     {
-       g_renderManager.Capture(thumbnail, width, height, CAPTUREFLAG_IMMEDIATELY);
- 
-+#if !defined(HAS_LIBAMCODEC)
-       if (thumbnail->GetUserState() == CAPTURESTATE_DONE)
-       {
-+#else//HAS_LIBAMCODEC
-+      {
-+        CScreenshotAML::CaptureVideoFrame(thumbnail->GetPixels(), width, height, false);
-+#endif
-         Crc32 crc;
-         crc.ComputeFromLowerCase(g_application.CurrentFile());
-         bookmark.thumbNailImage = StringUtils::Format("%08x_%i.jpg", (unsigned __int32) crc, (int)bookmark.timeInSeconds);
-@@ -349,8 +357,10 @@ bool CGUIDialogVideoBookmarks::AddBookmark(CVideoInfoTag* tag)
-                                             bookmark.thumbNailImage))
-           bookmark.thumbNailImage.clear();
-       }
-+#if !defined(HAS_LIBAMCODEC)
-       else
-         CLog::Log(LOGERROR,"CGUIDialogVideoBookmarks: failed to create thumbnail");
-+#endif
- 
-       g_renderManager.ReleaseRenderCapture(thumbnail);
-     }

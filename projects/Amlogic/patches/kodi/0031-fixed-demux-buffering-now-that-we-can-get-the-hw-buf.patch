@@ -1,16 +1,16 @@
-From bdea01757200c83004cb39029a47ee85fc362476 Mon Sep 17 00:00:00 2001
+From dfdc1c2e866e9a88a3512cc3920e64c1ff131181 Mon Sep 17 00:00:00 2001
 From: davilla <davilla@4pi.com>
 Date: Sun, 21 Dec 2014 17:35:18 -0500
-Subject: [PATCH] [aml] fixed demux buffering, now that we can get the hw
+Subject: [PATCH 31/32] fixed demux buffering, now that we can get the hw
  buffered time, use it
 
 ---
- xbmc/cores/dvdplayer/DVDCodecs/Video/AMLCodec.cpp | 72 +++++++++++------------
- xbmc/cores/dvdplayer/DVDCodecs/Video/AMLCodec.h   |  1 -
+ xbmc/cores/dvdplayer/DVDCodecs/Video/AMLCodec.cpp |   72 ++++++++++-----------
+ xbmc/cores/dvdplayer/DVDCodecs/Video/AMLCodec.h   |    1 -
  2 files changed, 35 insertions(+), 38 deletions(-)
 
 diff --git a/xbmc/cores/dvdplayer/DVDCodecs/Video/AMLCodec.cpp b/xbmc/cores/dvdplayer/DVDCodecs/Video/AMLCodec.cpp
-index 00a0770..f9c46f1 100644
+index 8d49de8..295f36f 100644
 --- a/xbmc/cores/dvdplayer/DVDCodecs/Video/AMLCodec.cpp
 +++ b/xbmc/cores/dvdplayer/DVDCodecs/Video/AMLCodec.cpp
 @@ -91,6 +91,11 @@ public:
@@ -65,7 +65,7 @@ index 00a0770..f9c46f1 100644
  
    m_dll->codec_set_cntl_avthresh(&am_private->vcodec, AV_SYNC_THRESH);
    m_dll->codec_set_cntl_syncthresh(&am_private->vcodec, 0);
-@@ -1653,6 +1668,7 @@ void CAMLCodec::Reset()
+@@ -1657,6 +1672,7 @@ void CAMLCodec::Reset()
    }
    // reset the decoder
    m_dll->codec_reset(&am_private->vcodec);
@@ -73,7 +73,7 @@ index 00a0770..f9c46f1 100644
    dumpfile_close(am_private);
    dumpfile_open(am_private);
  
-@@ -1666,7 +1682,6 @@ void CAMLCodec::Reset()
+@@ -1670,7 +1686,6 @@ void CAMLCodec::Reset()
    aml_set_sysfs_int("/sys/class/video/blackout_policy", blackout_policy);
  
    // reset some interal vars
@@ -81,7 +81,7 @@ index 00a0770..f9c46f1 100644
    m_cur_pts = 0;
    m_cur_pictcnt = 0;
    m_old_pictcnt = 0;
-@@ -1739,29 +1754,17 @@ int CAMLCodec::Decode(uint8_t *pData, size_t iSize, double dts, double pts)
+@@ -1743,29 +1758,17 @@ int CAMLCodec::Decode(uint8_t *pData, size_t iSize, double dts, double pts)
        if (am_private->am_pkt.isvalid)
          CLog::Log(LOGDEBUG, "CAMLCodec::Decode: write_av_packet looping");
      }
@@ -120,7 +120,7 @@ index 00a0770..f9c46f1 100644
  
    // we must return VC_BUFFER or VC_PICTURE,
    // default to VC_BUFFER.
-@@ -1770,10 +1773,8 @@ int CAMLCodec::Decode(uint8_t *pData, size_t iSize, double dts, double pts)
+@@ -1774,10 +1777,8 @@ int CAMLCodec::Decode(uint8_t *pData, size_t iSize, double dts, double pts)
    {
      m_old_pictcnt++;
      rtn = VC_PICTURE;
@@ -133,7 +133,7 @@ index 00a0770..f9c46f1 100644
        rtn |= VC_BUFFER;
    }
  /*
-@@ -1805,7 +1806,7 @@ bool CAMLCodec::GetPicture(DVDVideoPicture *pDvdVideoPicture)
+@@ -1809,7 +1810,7 @@ bool CAMLCodec::GetPicture(DVDVideoPicture *pDvdVideoPicture)
    {
      // We are FF/RW; Do not use the Player clock or it just doesn't work
      if (m_cur_pts == 0)
@@ -142,7 +142,7 @@ index 00a0770..f9c46f1 100644
      else
        pDvdVideoPicture->pts = (double)m_cur_pts / PTS_FREQ * DVD_TIME_BASE;
    }
-@@ -1861,16 +1862,13 @@ double CAMLCodec::GetTimeSize()
+@@ -1865,16 +1866,13 @@ double CAMLCodec::GetTimeSize()
    if (!m_opened)
      return 0;
  
@@ -164,7 +164,7 @@ index 00a0770..f9c46f1 100644
    double timesize = m_timesize;
    if (timesize < 0.0)
      timesize = 0.0;
-@@ -1901,7 +1899,7 @@ void CAMLCodec::Process()
+@@ -1905,7 +1903,7 @@ void CAMLCodec::Process()
        }
  
        pts_video = get_pts_video();
@@ -186,5 +186,5 @@ index 3aa025d..e6a2848 100644
    volatile int64_t m_cur_pictcnt;
    volatile int64_t m_old_pictcnt;
 -- 
-1.8.3.1
+1.7.10.4
 

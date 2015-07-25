@@ -1,12 +1,33 @@
-diff -Nru kodi-14-7cc53a9.orig/language/English/strings.po kodi-14-7cc53a9.patch/language/English/strings.po
---- kodi-14-7cc53a9.orig/language/English/strings.po	2015-06-13 22:09:03.639278087 +0300
-+++ kodi-14-7cc53a9.patch/language/English/strings.po	2015-06-13 22:33:18.156515452 +0300
-@@ -16125,4 +16125,20 @@
- #: system/settings/settings.xml
- msgctxt "#60002"
- msgid "Use software decoding for Standard Definition video content (< 720p)"
--msgstr ""
-\ No newline at end of file
+From aaddd5b963c93abc7768075f62354fd365972b27 Mon Sep 17 00:00:00 2001
+From: alex <surkov.alex@gmail.com>
+Date: Thu, 16 Jul 2015 12:54:18 +0300
+Subject: [PATCH 58/61] [PATCH] [aml] Ability to select software video decode
+ SD content
+
+---
+ language/English/strings.po                        |   26 ++++++++++
+ language/Russian/strings.po                        |   25 ++++++++++
+ system/settings/settings.xml                       |   51 ++++++++++++++++++++
+ .../DVDCodecs/Video/DVDVideoCodecAmlogic.cpp       |   26 +++++++++-
+ 4 files changed, 127 insertions(+), 1 deletion(-)
+
+diff --git a/language/English/strings.po b/language/English/strings.po
+index 15090fc..07107a8 100755
+--- a/language/English/strings.po
++++ b/language/English/strings.po
+@@ -16116,3 +16116,29 @@ msgstr ""
+ msgctxt "#38010"
+ msgid "GPU accelerated"
+ msgstr ""
++
++#: system/settings/settings.xml
++msgctxt "#60001"
++msgid "Use software decoding for SD video content"
++msgstr ""
++
++#: system/settings/settings.xml
++msgctxt "#60002"
++msgid "Use software decoding for Standard Definition video content (< 720p)"
 +msgstr ""
 +
 +#: system/settings/settings.xml
@@ -24,13 +45,24 @@ diff -Nru kodi-14-7cc53a9.orig/language/English/strings.po kodi-14-7cc53a9.patch
 +msgid "Use software decoding for MPEG4 (SD) video content"
 +msgstr ""
 +
-diff -Nru kodi-14-7cc53a9.orig/language/Russian/strings.po kodi-14-7cc53a9.patch/language/Russian/strings.po
---- kodi-14-7cc53a9.orig/language/Russian/strings.po	2015-06-13 22:09:03.639278087 +0300
-+++ kodi-14-7cc53a9.patch/language/Russian/strings.po	2015-06-13 22:32:39.244588214 +0300
-@@ -13090,3 +13090,18 @@
- msgctxt "#60002"
- msgid "Use software decoding for Standard Definition video content (< 720p)"
- msgstr "Использовать программное декодирование для видео контента с разрешением < 720"
+diff --git a/language/Russian/strings.po b/language/Russian/strings.po
+index fd5f2a8..83c5e2f 100644
+--- a/language/Russian/strings.po
++++ b/language/Russian/strings.po
+@@ -13080,3 +13080,28 @@ msgstr "Метод открытия/воспроизведения дисков
+ msgctxt "#38010"
+ msgid "GPU accelerated"
+ msgstr "Ускорение при помощи видеокарты"
++
++#: system/settings/settings.xml
++msgctxt "#60001"
++msgid "Use software decoding for SD video content"
++msgstr "Использовать программное декодирование для SD видео контента"
++
++#: system/settings/settings.xml
++msgctxt "#60002"
++msgid "Use software decoding for Standard Definition video content (< 720p)"
++msgstr "Использовать программное декодирование для видео контента с разрешением < 720"
 +
 +#: system/settings/settings.xml
 +msgctxt "#60003"
@@ -46,13 +78,26 @@ diff -Nru kodi-14-7cc53a9.orig/language/Russian/strings.po kodi-14-7cc53a9.patch
 +msgctxt "#60005"
 +msgid "Use software decoding for MPEG4 (SD) video content"
 +msgstr "Использовать програмное декодирование для MPEG4 (SD) видео"
-diff -Nru kodi-14-7cc53a9.orig/system/settings/settings.xml kodi-14-7cc53a9.patch/system/settings/settings.xml
---- kodi-14-7cc53a9.orig/system/settings/settings.xml	2015-06-13 22:09:03.639278087 +0300
-+++ kodi-14-7cc53a9.patch/system/settings/settings.xml	2015-06-13 22:35:40.680248876 +0300
-@@ -612,6 +612,45 @@
+diff --git a/system/settings/settings.xml b/system/settings/settings.xml
+index 68f3c67..26ecfa3 100644
+--- a/system/settings/settings.xml
++++ b/system/settings/settings.xml
+@@ -600,6 +600,57 @@
            </updates>
            <control type="toggle" />
-         </setting>        
+         </setting>
++        <setting id="videoplayer.useswdecodingforsd" type="boolean" label="60001" help="60002">
++          <requirement>HAVE_AMCODEC</requirement>
++          <dependencies>
++            <dependency type="enable" setting="videoplayer.decodingmethod" operator="is">1</dependency>
++          </dependencies>
++          <level>2</level>
++          <default>false</default>
++          <updates>
++            <update type="change" />
++          </updates>
++          <control type="toggle" />
++        </setting>        
 +        <setting id="videoplayer.useswdecodingformpeg2sd" type="boolean" label="60003">
 +          <requirement>HAVE_AMCODEC</requirement>
 +          <dependencies>
@@ -95,10 +140,33 @@ diff -Nru kodi-14-7cc53a9.orig/system/settings/settings.xml kodi-14-7cc53a9.patc
          <setting id="videoplayer.usevdpau" type="boolean" label="13425" help="36155">
            <requirement>HAVE_LIBVDPAU</requirement>
            <dependencies>
-diff -Nru kodi-14-7cc53a9.orig/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp kodi-14-7cc53a9.patch/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp
---- kodi-14-7cc53a9.orig/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp	2015-06-13 22:09:03.639278087 +0300
-+++ kodi-14-7cc53a9.patch/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp	2015-06-13 22:28:50.929014972 +0300
-@@ -76,6 +76,12 @@
+diff --git a/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp b/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp
+index 9a36cb6..65be679 100644
+--- a/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp
++++ b/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp
+@@ -24,6 +24,8 @@
+ #include "DVDClock.h"
+ #include "DVDStreamInfo.h"
+ #include "AMLCodec.h"
++#include "settings/Settings.h"
++#include "settings/VideoSettings.h"
+ #include "utils/AMLUtils.h"
+ #include "utils/BitstreamConverter.h"
+ #include "utils/log.h"
+@@ -61,7 +63,11 @@ CDVDVideoCodecAmlogic::~CDVDVideoCodecAmlogic()
+ bool CDVDVideoCodecAmlogic::Open(CDVDStreamInfo &hints, CDVDCodecOptions &options)
+ {
+   m_hints = hints;
+-
++  if ((EDECODEMETHOD)CSettings::Get().GetInt("videoplayer.decodingmethod") == VS_DECODEMETHOD_HARDWARE && CSettings::Get().GetBool("videoplayer.useswdecodingforsd") && m_hints.width < 1280)
++     {
++       CLog::Log(LOGDEBUG, "Use Software decoding for SD content");
++        return false;
++  }
+   switch(m_hints.codec)
+   {
+     case AV_CODEC_ID_MJPEG:
+@@ -70,6 +76,12 @@ bool CDVDVideoCodecAmlogic::Open(CDVDStreamInfo &hints, CDVDCodecOptions &option
      case AV_CODEC_ID_MPEG1VIDEO:
      case AV_CODEC_ID_MPEG2VIDEO:
      case AV_CODEC_ID_MPEG2VIDEO_XVMC:
@@ -111,7 +179,7 @@ diff -Nru kodi-14-7cc53a9.orig/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCode
        m_mpeg2_sequence_pts = 0;
        m_mpeg2_sequence = new mpeg2_sequence;
        m_mpeg2_sequence->width  = m_hints.width;
-@@ -88,6 +94,12 @@
+@@ -82,6 +94,12 @@ bool CDVDVideoCodecAmlogic::Open(CDVDStreamInfo &hints, CDVDCodecOptions &option
        m_pFormatName = "am-mpeg2";
        break;
      case AV_CODEC_ID_H264:
@@ -124,7 +192,7 @@ diff -Nru kodi-14-7cc53a9.orig/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCode
        m_pFormatName = "am-h264";
        // convert h264-avcC to h264-annex-b as h264-avcC
        // under streamers can have issues when seeking.
-@@ -107,6 +119,12 @@
+@@ -101,6 +119,12 @@ bool CDVDVideoCodecAmlogic::Open(CDVDStreamInfo &hints, CDVDCodecOptions &option
      case AV_CODEC_ID_MPEG4:
      case AV_CODEC_ID_MSMPEG4V2:
      case AV_CODEC_ID_MSMPEG4V3:
@@ -137,3 +205,6 @@ diff -Nru kodi-14-7cc53a9.orig/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCode
        m_pFormatName = "am-mpeg4";
        break;
      case AV_CODEC_ID_H263:
+-- 
+1.7.10.4
+
