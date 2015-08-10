@@ -1,5 +1,5 @@
---- a/arch/arm/boot/dts/amlogic/meson8m2_n200_2G.dtd
-+++ b/arch/arm/boot/dts/amlogic/meson8m2_n200_2G.dtd
+--- a/arch/arm/boot/dts/amlogic/meson8m2_n200_2G.dtd	2015-07-15 10:56:42.000000000 +0200
++++ b/arch/arm/boot/dts/amlogic/meson8m2_n200_2G.dtd	2015-08-05 12:39:33.637250493 +0200
 @@ -1,1967 +1,1070 @@
  /dts-v1/;
 -/// ***************************************************************************************\n
@@ -2728,7 +2728,7 @@
 -                phy_interface = <1>;
 -                new_maclogic = <1>;
 -                reset_pin_enable = <0>;
--                reset_pin = "GPI0H_4";
+-                reset_pin = "GPIOH_4";
 -                reset_delay = <100>;
 +		dev_name = "mesonvout";
  	};
