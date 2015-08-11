@@ -17,12 +17,12 @@
 ################################################################################
 
 PKG_NAME="systemd"
-PKG_VERSION="221"
+PKG_VERSION="224"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.freedesktop.org/wiki/Software/systemd"
-PKG_URL="http://www.freedesktop.org/software/systemd/$PKG_NAME-$PKG_VERSION.tar.xz"
+PKG_URL="https://github.com/$PKG_NAME/$PKG_NAME/archive/v${PKG_VERSION//./_}/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain libcap kmod util-linux libgcrypt"
 PKG_PRIORITY="required"
 PKG_SECTION="system"
