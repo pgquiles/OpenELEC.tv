@@ -1,0 +1,13 @@
+diff -rupd kodi-15.1-rc1-2ecd830.orig/system/keymaps/keyboard.xml kodi-15.1-rc1-2ecd830/system/keymaps/keyboard.xml
+--- kodi-15.1-rc1-2ecd830.orig/system/keymaps/keyboard.xml	2015-07-27 19:42:00.000000000 +0200
++++ kodi-15.1-rc1-2ecd830/system/keymaps/keyboard.xml	2015-08-13 01:23:18.082399218 +0200
+@@ -53,6 +53,8 @@
+       <pagedown>PageDown</pagedown>
+       <return>Select</return>
+       <enter>Select</enter>
++      <key id='97'>Select</key>
++      <key id='704'>Hibernate</key>
+       <backspace>Back</backspace>
+       <key id='65446'>Back</key>
+       <m>ActivateWindow(PlayerControls)</m>
+Only in kodi-15.1-rc1-2ecd830/system/keymaps: keyboard.xml~
