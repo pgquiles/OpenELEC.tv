@@ -11,7 +11,7 @@ GOTO="end"
 LABEL="begin"
 ### Brodcom bcm4330 bluetooth device
 ATTRS{vendor}=="0x02d0", ATTRS{device}=="0x4330", \
-  ENV{brcm_device}="bcm4330"
+  ENV{brcm_device}="bcm40183b2"
 ### Brodcom bcm4329 bluetooth device
 ATTRS{vendor}=="0x02d0", ATTRS{device}=="0x4329", \
   ENV{brcm_device}="bcm4329"
@@ -22,7 +22,7 @@ ATTRS{vendor}=="0x02d0", ATTRS{device}=="0xa962", \
 ATTRS{vendor}=="0x02d0", ATTRS{device}=="0x4335", \
   ENV{brcm_device}="bcm4335c0"
 
-ENV{brcm_device}=="bcm20*|bcm4335*", ACTION=="add", \
+ENV{brcm_device}=="bcm40183*|bcm20*|bcm4335*", ACTION=="add", \
   TAG+="systemd", ENV{SYSTEMD_WANTS}+="brcmfmac_sdio-firmware-aml@$env{brcm_device}.service", GOTO="end"
 ENV{brcm_device}=="bcm43*", ACTION=="add", \
   TAG+="systemd", ENV{SYSTEMD_WANTS}+="brcmfmac_sdio-firmware-imx@$env{brcm_device}.service"
