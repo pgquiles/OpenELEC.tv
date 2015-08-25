@@ -1,7 +1,7 @@
 diff -rupd linux-amlogic-3.10-4f26511.orig/drivers/amlogic/wifi/broadcom/broadcm_40181/dhd_config.c linux-amlogic-3.10-4f26511/drivers/amlogic/wifi/broadcom/broadcm_40181/dhd_config.c
 --- linux-amlogic-3.10-4f26511.orig/drivers/amlogic/wifi/broadcom/broadcm_40181/dhd_config.c	2015-08-14 08:43:36.000000000 +0200
-+++ linux-amlogic-3.10-4f26511/drivers/amlogic/wifi/broadcom/broadcm_40181/dhd_config.c	2015-08-25 01:29:53.836779094 +0200
-@@ -108,19 +108,21 @@ const static char *bcm4339a0ag_fw_name[]
++++ linux-amlogic-3.10-4f26511/drivers/amlogic/wifi/broadcom/broadcm_40181/dhd_config.c	2015-08-25 15:45:06.507365046 +0200
+@@ -108,19 +108,28 @@ const static char *bcm4339a0ag_fw_name[]
  	"fw_bcm4339a0_ag_p2p.bin",
  	"fw_bcm4339a0_ag_mfg.bin"
  };
@@ -18,6 +18,13 @@ diff -rupd linux-amlogic-3.10-4f26511.orig/drivers/amlogic/wifi/broadcom/broadcm
 -#define dtoh32(i) i
 -#define dtoh16(i) i
 -#define htodchanspec(i) i
++const static char *bcm4339a0eag_fw_name[] = {
++	"fw_bcm4339a0e_ag.bin",
++	"fw_bcm4339a0e_ag_apsta.bin",
++	"fw_bcm4339a0e_ag_p2p.bin",
++	"fw_bcm4339a0es_ag_mfg.bin"
++};
++
 +const static char *nv_name[] = {
 +	"ap6210_nvram.txt",
 +	"ap6330_nvram.txt",
@@ -35,7 +42,7 @@ diff -rupd linux-amlogic-3.10-4f26511.orig/drivers/amlogic/wifi/broadcom/broadcm
  #define dtohchanspec(i) i
  
  void
-@@ -328,67 +330,70 @@ dhd_conf_set_nv_name_by_mac(dhd_pub_t *d
+@@ -328,67 +337,70 @@ dhd_conf_set_nv_name_by_mac(dhd_pub_t *d
  		}
  	}
  }
@@ -167,7 +174,7 @@ diff -rupd linux-amlogic-3.10-4f26511.orig/drivers/amlogic/wifi/broadcom/broadcm
  
  void
  dhd_conf_set_fw_name_by_chip(dhd_pub_t *dhd, char *dst, char *src)
-@@ -465,12 +470,24 @@ dhd_conf_set_fw_name_by_chip(dhd_pub_t *
+@@ -465,12 +477,24 @@ dhd_conf_set_fw_name_by_chip(dhd_pub_t *
  				strcpy(&dst[i+1], bcm43241b4ag_fw_name[fw_type]);
  			break;
  		case BCM4335_CHIP_ID:
@@ -183,9 +190,10 @@ diff -rupd linux-amlogic-3.10-4f26511.orig/drivers/amlogic/wifi/broadcom/broadcm
  			break;
  		case BCM4339_CHIP_ID:
 -			if (chiprev == BCM4339A0_CHIP_REV)
+-				strcpy(&dst[i+1], bcm4339a0ag_fw_name[fw_type]);
 +			if (chiprev == BCM4339A0_CHIP_REV) {
-+                                printf("pgquiles - BCM4339A0_CHIP_REV and CHIP_REV is BCM4339A0_CHIP_REV (%d)", chiprev);
- 				strcpy(&dst[i+1], bcm4339a0ag_fw_name[fw_type]);
++                                printf("pgquiles - BCM4339_CHIP_ID and CHIP_REV is BCM4339A0_CHIP_REV (%d)", chiprev);
++				strcpy(&dst[i+1], bcm4339a0eag_fw_name[fw_type]);
 +                        }
 +                        else
 +                        {
@@ -194,7 +202,7 @@ diff -rupd linux-amlogic-3.10-4f26511.orig/drivers/amlogic/wifi/broadcom/broadcm
  			break;
  	}
  
-@@ -583,10 +600,10 @@ dhd_conf_fix_country(dhd_pub_t *dhd)
+@@ -583,10 +607,10 @@ dhd_conf_fix_country(dhd_pub_t *dhd)
  	if (!(dhd && dhd->conf)) {
  		return bcmerror;
  	}
@@ -208,7 +216,7 @@ diff -rupd linux-amlogic-3.10-4f26511.orig/drivers/amlogic/wifi/broadcom/broadcm
  	if ((bcmerror = dhd_wl_ioctl_cmd(dhd, WLC_GET_VALID_CHANNELS, valid_chan_list, sizeof(valid_chan_list), FALSE, 0)) < 0) {
  		CONFIG_ERROR(("%s: get channels failed with %d\n", __FUNCTION__, bcmerror));
  	}
-@@ -1138,11 +1155,11 @@ dhd_conf_read_config(dhd_pub_t *dhd)
+@@ -1138,11 +1162,11 @@ dhd_conf_read_config(dhd_pub_t *dhd)
  	wl_mac_list_t *mac_list;
  	wl_mac_range_t *mac_range;
  
@@ -225,7 +233,7 @@ diff -rupd linux-amlogic-3.10-4f26511.orig/drivers/amlogic/wifi/broadcom/broadcm
  	memset(pick, 0, MAXSZ_BUF);
  	pconf_path = dhd->conf_path;
  
-@@ -1624,8 +1641,8 @@ err:
+@@ -1624,8 +1648,8 @@ err:
  	if (image)
  		dhd_os_close_image(image);
  
