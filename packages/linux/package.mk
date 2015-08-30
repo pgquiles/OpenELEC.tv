@@ -31,8 +31,8 @@ PKG_SHORTDESC="linux26: The Linux kernel 2.6 precompiled kernel binary image and
 PKG_LONGDESC="This package contains a precompiled kernel image and the modules."
 case "$LINUX" in
   amlogic)
-    PKG_VERSION="amlogic-3.10-4f26511"
-    PKG_URL="http://amlinux.ru/source/$PKG_NAME-$PKG_VERSION.tar.gz"
+    PKG_VERSION="amlogic-3.10.87+preempt_rt-3.10.85-rt93+pgquiles1"
+    PKG_URL="https://github.com/pgquiles/$PKG_NAME/archive/$PKG_VERSION.tar.gz"
     ;;
   imx6)
     PKG_VERSION="cuboxi-3.14-ea83bda"
@@ -63,6 +63,21 @@ if [ "$BOOTLOADER" = "u-boot" -o "$LINUX" = "amlogic" ]; then
 else
   KERNEL_IMAGE="bzImage"
 fi
+
+unpack() {
+(
+  shopt -s dotglob
+	
+  PKG_FILENAME="$(echo $PKG_URL | sed -e 's|.*/\(.*\)$|\1|' -e 's|%20| |g')"
+  PKG_FULLPATH=$(readlink -f $SOURCES/$PKG_NAME/$PKG_FILENAME)
+
+  tar xf "$PKG_FULLPATH" -C $BUILD
+
+  GITHUB_DIRECTORY_NAME="$(echo $PKG_NAME-$PKG_VERSION | sed s,+,-,g)"
+  #mv $BUILD/somename-$PKG_VERSION $ROOT/$PKG_BUILD
+  mv $BUILD/$GITHUB_DIRECTORY_NAME $BUILD/$PKG_NAME-$PKG_VERSION
+)
+}
 
 post_patch() {
   if [ -n "$DEVICE" -a -f $PROJECT_DIR/$PROJECT/devices/$DEVICE/$PKG_NAME/$PKG_NAME.$TARGET_ARCH.conf ]; then

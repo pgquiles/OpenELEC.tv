@@ -1,0 +1,30 @@
+From b26fe6202a0b574039605282979088fc4b6a8edc Mon Sep 17 00:00:00 2001
+From: Pau Garcia i Quiles <pgquiles@elpauer.org>
+Date: Sat, 29 Aug 2015 23:17:58 +0200
+Subject: [PATCH] DEFINE_MUTEX defines a "struct mutex"
+ (http://lxr.free-electrons.com/source/include/linux/mutex.h#L50) which does
+ not have an owner filed if CONFIG_SMP is defined but if
+ (http://lxr.free-electrons.com/source/include/linux/mutex.h#L55)'
+
+This patch makes the definition and the usage agree so that it builds
+if CONFIG_SMP if defined but CONFIG_DEBUG_MUTEXES and CONFIG_MUTEX_SPIN_ON_OWNER are not
+---
+ drivers/staging/android/ashmem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
+index 612fc48..51844fa 100644
+--- a/drivers/staging/android/ashmem.c
++++ b/drivers/staging/android/ashmem.c
+@@ -364,7 +364,7 @@ static int ashmem_shrink(struct shrinker *s, struct shrink_control *sc)
+ 	if (!sc->nr_to_scan)
+ 		return lru_count;
+ 
+-#if defined(CONFIG_SMP)
++#if defined(CONFIG_DEBUG_MUTEXES) || defined(CONFIG_MUTEX_SPIN_ON_OWNER)
+ 	owner = ashmem_mutex.owner;
+ #endif
+ 	if (owner && (owner == current))
+-- 
+2.5.0
+

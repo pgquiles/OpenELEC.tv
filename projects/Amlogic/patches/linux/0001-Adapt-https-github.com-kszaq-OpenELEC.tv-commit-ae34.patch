@@ -1,10 +1,11 @@
-From 6d5d6c8a7d3ec28648d844376c3ee0dd701f8315 Mon Sep 17 00:00:00 2001
+From 2d19cbb33912a4523c218b01d1b62f9cc970a5f5 Mon Sep 17 00:00:00 2001
 From: Pau Garcia i Quiles <pgquiles@elpauer.org>
 Date: Wed, 12 Aug 2015 18:26:23 +0200
 Subject: [PATCH] Adapt
  https://github.com/kszaq/OpenELEC.tv/commit/ae34d2d975f79ce21af28ba908ab5265ccbaad3d
  to S812
 
+Signed-off-by: Pau Garcia i Quiles <pgquiles@elpauer.org>
 ---
  arch/arm/mach-meson8/include/mach/pm.h |  1 +
  arch/arm/mach-meson8/pm.c              | 42 ++++++++++++++++++++++++++++++----
@@ -22,7 +23,7 @@ index a409586..bd14dd8 100755
 +void meson_pm_poweroff(void);
  #endif
 diff --git a/arch/arm/mach-meson8/pm.c b/arch/arm/mach-meson8/pm.c
-index 5b77a58..ff276bf 100755
+index 5b42539..0d48810 100755
 --- a/arch/arm/mach-meson8/pm.c
 +++ b/arch/arm/mach-meson8/pm.c
 @@ -1,4 +1,4 @@
@@ -56,7 +57,7 @@ index 5b77a58..ff276bf 100755
  #define ON  1
  #define OFF 0
  
-@@ -216,8 +220,16 @@ void analog_switch(int flag)
+@@ -214,8 +218,16 @@ void analog_switch(int flag)
  #ifdef CONFIG_HAS_EARLYSUSPEND
  static void meson_system_early_suspend(struct early_suspend *h)
  {
@@ -74,7 +75,7 @@ index 5b77a58..ff276bf 100755
  	if (pdata->set_exgpio_early_suspend) {
  		pdata->set_exgpio_early_suspend(OFF);
  	}
-@@ -229,11 +241,13 @@ static void meson_system_early_suspend(struct early_suspend *h)
+@@ -227,11 +239,13 @@ static void meson_system_early_suspend(struct early_suspend *h)
  
  static void meson_system_late_resume(struct early_suspend *h)
  {
@@ -89,17 +90,17 @@ index 5b77a58..ff276bf 100755
  	}
  }
  #endif
-@@ -261,7 +275,8 @@ static void meson_pm_suspend(void)
- 	aml_clr_reg32_mask(P_HHI_SYS_CPU_CLK_CNTL, 1 << 7);
+@@ -260,7 +274,8 @@ static void meson_pm_suspend(void)
  	aml_clr_reg32_mask(P_HHI_SYS_PLL_CNTL, 1 << 30);//disable sys pll
  
+ #ifdef CONFIG_AML_GPIO_KEY
 -	if(det_pwr_key())//get pwr key and wakeup im
 +	//if(det_pwr_key())//get pwr key and wakeup im
 +	if(poweroff_state==0 && det_pwr_key())//get pwr key and wakeup im
  	{
  		clr_pwr_key();
  		WRITE_AOBUS_REG(AO_RTI_STATUS_REG2, FLAG_WAKEUP_PWRKEY);
-@@ -311,6 +326,16 @@ static void meson_pm_suspend(void)
+@@ -312,6 +327,16 @@ static void meson_pm_suspend(void)
  	//analog_switch(ON);
  }
  
@@ -116,7 +117,7 @@ index 5b77a58..ff276bf 100755
  static int meson_pm_prepare(void)
  {
  	  printk(KERN_INFO "enter meson_pm_prepare!\n");
-@@ -370,6 +395,7 @@ static struct meson_pm_config aml_pm_pdata = {
+@@ -371,6 +396,7 @@ static struct meson_pm_config aml_pm_pdata = {
  
  static int __init meson_pm_probe(struct platform_device *pdev)
  {
@@ -124,7 +125,7 @@ index 5b77a58..ff276bf 100755
  	printk(KERN_INFO "enter meson_pm_probe!\n");
  #ifdef CONFIG_HAS_EARLYSUSPEND
  	early_suspend.level = EARLY_SUSPEND_LEVEL_DISABLE_FB;
-@@ -377,6 +403,14 @@ static int __init meson_pm_probe(struct platform_device *pdev)
+@@ -378,6 +404,14 @@ static int __init meson_pm_probe(struct platform_device *pdev)
  	early_suspend.resume = meson_system_late_resume;
  	register_early_suspend(&early_suspend);
  #endif
