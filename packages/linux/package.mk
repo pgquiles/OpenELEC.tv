@@ -31,7 +31,7 @@ PKG_SHORTDESC="linux26: The Linux kernel 2.6 precompiled kernel binary image and
 PKG_LONGDESC="This package contains a precompiled kernel image and the modules."
 case "$LINUX" in
   amlogic)
-    PKG_VERSION="amlogic-3.10.87+preempt_rt-3.10.85-rt93+pgquiles1"
+    PKG_VERSION="3.10.87"
     PKG_URL="https://github.com/pgquiles/$PKG_NAME/archive/$PKG_VERSION.tar.gz"
     ;;
   imx6)
@@ -73,9 +73,9 @@ unpack() {
 
   tar xf "$PKG_FULLPATH" -C $BUILD
 
-  GITHUB_DIRECTORY_NAME="$(echo $PKG_NAME-$PKG_VERSION | sed s,+,-,g)"
-  #mv $BUILD/somename-$PKG_VERSION $ROOT/$PKG_BUILD
-  mv $BUILD/$GITHUB_DIRECTORY_NAME $BUILD/$PKG_NAME-$PKG_VERSION
+#  GITHUB_DIRECTORY_NAME="$(echo $PKG_NAME-$PKG_VERSION | sed s,+,-,g)"
+#  #mv $BUILD/somename-$PKG_VERSION $ROOT/$PKG_BUILD
+#  mv $BUILD/$GITHUB_DIRECTORY_NAME $BUILD/$PKG_NAME-$PKG_VERSION
 )
 }
 
