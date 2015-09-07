@@ -17,7 +17,7 @@
 ################################################################################
 
 PKG_NAME="boost"
-PKG_VERSION="1_58_0"
+PKG_VERSION="1_59_0"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"
@@ -64,15 +64,21 @@ make_target() {
 }
 
 makeinstall_target() {
-  $ROOT/$TOOLCHAIN/bin/bjam -d2 --toolset=gcc link=static \
+  $ROOT/$TOOLCHAIN/bin/bjam -d2 --toolset=gcc cxxflags="-std=c++11" link=static threading=multi \
                                 --prefix=$SYSROOT_PREFIX/usr \
                                 --ignore-site-config \
                                 --layout=system \
                                 --with-thread \
                                 --with-iostreams \
                                 --with-system \
-                                --with-serialization \
+                                --with-program_options \
+                                --with-chrono \
+                                --with-date_time \
                                 --with-filesystem \
+                                --with-log \
+                                --with-system \
+                                --with-timer \
+                                --with-serialization \
                                 --with-regex -sICU_PATH="$SYSROOT_PREFIX/usr" \
                                 install
 }

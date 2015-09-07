@@ -5,7 +5,7 @@ diff -rupd kodi-15.1-rc1-2ecd830.orig/system/keymaps/keyboard.xml kodi-15.1-rc1-
        <home>FirstPage</home>
        <end>LastPage</end>
        <power>XBMC.Suspend()</power>
-+      <key id='116'>XMBC.Suspend()</key>
++      <key id='704'>XMBC.Suspend()</key>
        <sleep>ActivateWindow(shutdownmenu)</sleep>
        <!-- PVR windows -->
        <e>ActivateWindow(TVGuide)</e>

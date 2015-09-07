@@ -103,6 +103,7 @@ PKG_CONFIGURE_OPTS_HOST="--target=$TARGET_NAME \
                          --enable-threads=posix \
                          --disable-libstdcxx-pch \
                          --enable-libstdcxx-time \
+			 --enable-libstdcxx-threads \
                          --enable-clocale=gnu \
                          $GCC_OPTS \
                          --disable-nls \
