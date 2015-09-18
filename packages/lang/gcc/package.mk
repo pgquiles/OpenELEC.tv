@@ -22,7 +22,8 @@ PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://gcc.gnu.org/"
-PKG_URL="ftp://ftp.gnu.org/gnu/gcc/$PKG_NAME-$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.bz2"
+#PKG_URL="ftp://ftp.gnu.org/gnu/gcc/$PKG_NAME-$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.bz2"
+PKG_URL="http://releases.linaro.org/15.06/components/toolchain/gcc-linaro/4.9/gcc-linaro-4.9-2015.06.tar.xz"
 PKG_DEPENDS_BOOTSTRAP="ccache:host autoconf:host binutils:host gmp:host mpfr:host mpc:host"
 PKG_DEPENDS_TARGET="gcc:host"
 PKG_DEPENDS_HOST="ccache:host autoconf:host binutils:host gmp:host mpfr:host mpc:host glibc"
@@ -108,6 +109,23 @@ PKG_CONFIGURE_OPTS_HOST="--target=$TARGET_NAME \
                          $GCC_OPTS \
                          --disable-nls \
                          --enable-checking=release"
+
+unpack() {
+(
+  shopt -s dotglob
+
+  PKG_FILENAME="$(echo $PKG_URL | sed -e 's|.*/\(.*\)$|\1|' -e 's|%20| |g')"
+  PKG_ORIG_DIRNAME="$(basename $PKG_URL .tar.xz)"
+  echo ==== PKG_FILENAME = $PKG_FILENAME
+
+  PKG_FULLPATH=$(readlink -f $SOURCES/$PKG_NAME/$PKG_FILENAME)
+  echo ==== PKG_FULLPATH = $PKG_FULLPATH
+
+  tar xf "$PKG_FULLPATH" -C $BUILD
+  #mv $BUILD/somename-$PKG_VERSION $ROOT/$PKG_BUILD
+  mv $BUILD/$PKG_ORIG_DIRNAME $ROOT/$PKG_BUILD
+)
+}
 
 pre_configure_bootstrap() {
   setup_toolchain host
