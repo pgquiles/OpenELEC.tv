@@ -32,7 +32,7 @@ PKG_LONGDESC="This package contains a precompiled kernel image and the modules."
 case "$LINUX" in
   amlogic)
     PKG_VERSION="3.10.87"
-    PKG_URL="https://github.com/pgquiles/$PKG_NAME/archive/$PKG_VERSION.tar.gz"
+    PKG_URL="https://github.com/surkovalex/$PKG_NAME/archive/$PKG_VERSION.tar.gz"
     ;;
   imx6)
     PKG_VERSION="cuboxi-3.14-ea83bda"
