@@ -1,180 +1,30 @@
-diff -rupd linux-amlogic-3.10-4f26511.orig/drivers/amlogic/wifi/broadcom/broadcm_40181/dhd_config.c linux-amlogic-3.10-4f26511/drivers/amlogic/wifi/broadcom/broadcm_40181/dhd_config.c
---- linux-amlogic-3.10-4f26511.orig/drivers/amlogic/wifi/broadcom/broadcm_40181/dhd_config.c	2015-08-14 08:43:36.000000000 +0200
-+++ linux-amlogic-3.10-4f26511/drivers/amlogic/wifi/broadcom/broadcm_40181/dhd_config.c	2015-08-25 16:15:10.974172209 +0200
-@@ -108,19 +108,28 @@ const static char *bcm4339a0ag_fw_name[]
+diff --git a/drivers/amlogic/wifi/broadcom/broadcm_40181/dhd_config.c b/drivers/amlogic/wifi/broadcom/broadcm_40181/dhd_config.c
+index 3e61dd3..bb6d3c2 100755
+--- a/drivers/amlogic/wifi/broadcom/broadcm_40181/dhd_config.c
++++ b/drivers/amlogic/wifi/broadcom/broadcm_40181/dhd_config.c
+@@ -108,6 +108,12 @@ const static char *bcm4339a0ag_fw_name[] = {
  	"fw_bcm4339a0_ag_p2p.bin",
  	"fw_bcm4339a0_ag_mfg.bin"
  };
--
--const static char *nv_name[] = {
--	"ap6210_nvram.txt",
--	"ap6330_nvram.txt",
--	"ap6181_nvram.txt",
--	"ap6335e_nvram.txt",
--};
- 
--#define htod32(i) i
--#define htod16(i) i
--#define dtoh32(i) i
--#define dtoh16(i) i
--#define htodchanspec(i) i
++
 +const static char *bcm4339a0eag_fw_name[] = {
-+	"fw_bcm4339a0e_ag.bin",
-+	"fw_bcm4339a0e_ag_apsta.bin",
-+	"fw_bcm4339a0e_ag_p2p.bin",
-+	"fw_bcm4339a0es_ag_mfg.bin"
++        "fw_bcm4339a0e_ag.bin",
++        "fw_bcm4339a0e_ag_apsta.bin",
++        "fw_bcm4339a0e_ag_p2p.bin"
 +};
-+
-+const static char *nv_name[] = {
-+	"ap6210_nvram.txt",
-+	"ap6330_nvram.txt",
-+	"ap6181_nvram.txt",
-+	"ap6335e_nvram.txt",
-+	"ap6234_nvram.txt",
-+	"ap62x2_nvram.txt",
-+};
-+
-+#define htod32(i) i
-+#define htod16(i) i
-+#define dtoh32(i) i
-+#define dtoh16(i) i
-+#define htodchanspec(i) i
- #define dtohchanspec(i) i
  
- void
-@@ -328,67 +337,70 @@ dhd_conf_set_nv_name_by_mac(dhd_pub_t *d
- 		}
- 	}
- }
--void
--dhd_conf_set_nv_name_by_chip(dhd_pub_t *dhd, char *dst, char *src)
--{
--	int fw_type, ag_type;
--	static uint chip, chiprev, first=1;
--	int i;
--
--	if (first) {
--		chip = dhd_bus_chip_id(dhd);
--		chiprev = dhd_bus_chiprev_id(dhd);
--		first = 0;
--	}
--
--	if (src[0] == '\0') {
--#ifdef CONFIG_BCMDHD_NVRAM_PATH
--		bcm_strncpy_s(src, sizeof(nvram_path), CONFIG_BCMDHD_NVRAM_PATH, MOD_PARAM_PATHLEN-1);
--		if (src[0] == '\0')
--#endif
--		{
--			printf("src nvram path is null\n");
--			return;
--		}
--	}
--
--		strcpy(dst, src);
--	#ifndef FW_PATH_AUTO_SELECT
--		return;
--	#endif
--
--	/* find out the last '/' */
--	i = strlen(dst);
--	while (i>0){
--		if (dst[i] == '/') break;
--		i--;
--	}
--	switch (chip) {
--		case BCM4330_CHIP_ID:
--					strcpy(&dst[i+1], nv_name[1]);
--						break;
--		case BCM43362_CHIP_ID:
--					strcpy(&dst[i+1], nv_name[0]);
--						break;	
--		case BCM43340_CHIP_ID: //bcm43341b0ag BCM43340B0
--					strcpy(&dst[i+1], nv_name[0]);
--						break;
--//		case BCM43341_CHIP_ID: //bcm43341b0ag BCM43341B0 
--//					strcpy(&dst[i+1], nv_name[0]);
--//						break;
--//		case BCM4324_CHIP_ID: //bcm43241b4ag BCM43241B4
--//					strcpy(&dst[i+1], nv_name[0]);
--//						break;
--		case BCM4335_CHIP_ID: //bcm4339a0ag BCM4335A0
--					strcpy(&dst[i+1], nv_name[3]);
--						break;
+ const static char *nv_name[] = {
+ 	"ap6210_nvram.txt",
+@@ -387,7 +393,7 @@ dhd_conf_set_nv_name_by_chip(dhd_pub_t *dhd, char *dst, char *src)
+ 		case BCM4335_CHIP_ID: //bcm4339a0ag BCM4335A0
+ 					strcpy(&dst[i+1], nv_name[3]);
+ 						break;
 -		case BCM4339_CHIP_ID: //bcm4339a0ag
--					strcpy(&dst[i+1], nv_name[3]);
--						break;
--	}
--	printf("%s: nvram_path=%s\n", __FUNCTION__, dst);
--}
--
-+void
-+dhd_conf_set_nv_name_by_chip(dhd_pub_t *dhd, char *dst, char *src)
-+{
-+	int fw_type, ag_type;
-+	static uint chip, chiprev, first=1;
-+	int i;
-+
-+	if (first) {
-+		chip = dhd_bus_chip_id(dhd);
-+		chiprev = dhd_bus_chiprev_id(dhd);
-+		first = 0;
-+	}
-+
-+	if (src[0] == '\0') {
-+#ifdef CONFIG_BCMDHD_NVRAM_PATH
-+		bcm_strncpy_s(src, sizeof(nvram_path), CONFIG_BCMDHD_NVRAM_PATH, MOD_PARAM_PATHLEN-1);
-+		if (src[0] == '\0')
-+#endif
-+		{
-+			printf("src nvram path is null\n");
-+			return;
-+		}
-+	}
-+
-+		strcpy(dst, src);
-+	#ifndef FW_PATH_AUTO_SELECT
-+		return;
-+	#endif
-+
-+	/* find out the last '/' */
-+	i = strlen(dst);
-+	while (i>0){
-+		if (dst[i] == '/') break;
-+		i--;
-+	}
-+	switch (chip) {
-+		case BCM4330_CHIP_ID:
-+					strcpy(&dst[i+1], nv_name[1]);
-+						break;
-+		case BCM43362_CHIP_ID:
-+					strcpy(&dst[i+1], nv_name[0]);
-+						break;	
-+		case BCM43340_CHIP_ID: //bcm43341b0ag BCM43340B0
-+			if (chiprev == BCM43340B0_CHIP_REV)
-+				strcpy(&dst[i+1], nv_name[4]);
-+			else
-+				strcpy(&dst[i+1], nv_name[0]);
-+						break;
-+		case BCM43341_CHIP_ID: //bcm43341b0ag BCM43341B0 
-+					strcpy(&dst[i+1], nv_name[4]);
-+						break;
-+		case BCM4324_CHIP_ID: //bcm43241b4ag BCM43241B4
-+					strcpy(&dst[i+1], nv_name[5]);
-+						break;
-+		case BCM4335_CHIP_ID: //bcm4339a0ag BCM4335A0
-+					strcpy(&dst[i+1], nv_name[3]);
-+						break;
-+		case BCM4339_CHIP_ID: //bcm4339a0ag
-+					strcpy(&dst[i+1], nv_name[3]);
-+						break;
-+	}
-+	printf("%s: nvram_path=%s\n", __FUNCTION__, dst);
-+}
-+
- 
- void
- dhd_conf_set_fw_name_by_chip(dhd_pub_t *dhd, char *dst, char *src)
-@@ -470,7 +482,7 @@ dhd_conf_set_fw_name_by_chip(dhd_pub_t *
++		case BCM4339_CHIP_ID: //bcm4339a0eag
+ 					strcpy(&dst[i+1], nv_name[3]);
+ 						break;
+ 	}
+@@ -475,7 +481,7 @@ dhd_conf_set_fw_name_by_chip(dhd_pub_t *dhd, char *dst, char *src)
  			break;
  		case BCM4339_CHIP_ID:
  			if (chiprev == BCM4339A0_CHIP_REV)
@@ -182,46 +32,4 @@ diff -rupd linux-amlogic-3.10-4f26511.orig/drivers/amlogic/wifi/broadcom/broadcm
 +				strcpy(&dst[i+1], bcm4339a0eag_fw_name[fw_type]);
  			break;
  	}
- 
-@@ -583,10 +595,10 @@ dhd_conf_fix_country(dhd_pub_t *dhd)
- 	if (!(dhd && dhd->conf)) {
- 		return bcmerror;
- 	}
--
-+
- 	memset(valid_chan_list, 0, sizeof(valid_chan_list));
--	list = (wl_uint32_list_t *)(void *) valid_chan_list;
--	list->count = htod32(WL_NUMCHANNELS);
-+	list = (wl_uint32_list_t *)(void *) valid_chan_list;
-+	list->count = htod32(WL_NUMCHANNELS);
- 	if ((bcmerror = dhd_wl_ioctl_cmd(dhd, WLC_GET_VALID_CHANNELS, valid_chan_list, sizeof(valid_chan_list), FALSE, 0)) < 0) {
- 		CONFIG_ERROR(("%s: get channels failed with %d\n", __FUNCTION__, bcmerror));
- 	}
-@@ -1138,11 +1150,11 @@ dhd_conf_read_config(dhd_pub_t *dhd)
- 	wl_mac_list_t *mac_list;
- 	wl_mac_range_t *mac_range;
- 
--	pick = kmalloc(MAXSZ_BUF, GFP_KERNEL);
--	if(!pick){
--		printk("kmalloc pick error \n");
--		goto err;
--	}
-+	pick = kmalloc(MAXSZ_BUF, GFP_KERNEL);
-+	if(!pick){
-+		printk("kmalloc pick error \n");
-+		goto err;
-+	}
- 	memset(pick, 0, MAXSZ_BUF);
- 	pconf_path = dhd->conf_path;
- 
-@@ -1624,8 +1636,8 @@ err:
- 	if (image)
- 		dhd_os_close_image(image);
- 
--	if(pick)
--		kfree(pick);
-+	if(pick)
-+		kfree(pick);
- 	return bcmerror;
- }
  
