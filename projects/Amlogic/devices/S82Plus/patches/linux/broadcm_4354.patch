@@ -1,0 +1,19 @@
+diff --git a/drivers/amlogic/wifi/broadcom/broadcm_4354/bcmsdh_sdmmc.c b/drivers/amlogic/wifi/broadcom/broadcm_4354/bcmsdh_sdmmc.c
+index 6ae2be3..df7efc0 100755
+--- a/drivers/amlogic/wifi/broadcom/broadcm_4354/bcmsdh_sdmmc.c
++++ b/drivers/amlogic/wifi/broadcom/broadcm_4354/bcmsdh_sdmmc.c
+@@ -59,14 +59,7 @@ static void IRQHandler(struct sdio_func *func);
+ static void IRQHandlerF2(struct sdio_func *func);
+ #endif /* !defined(OOB_INTR_ONLY) */
+ static int sdioh_sdmmc_get_cisaddr(sdioh_info_t *sd, uint32 regaddr);
+-#if defined(CUSTOMER_HW_AMLOGIC)
+-int sdio_reset_comm(struct mmc_card *card)
+-{
+-	return 0;
+-}
+-#else
+ extern int sdio_reset_comm(struct mmc_card *card);
+-#endif
+ 
+ extern PBCMSDH_SDMMC_INSTANCE gInstance;
+ 
