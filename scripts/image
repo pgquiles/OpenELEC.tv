@@ -48,7 +48,7 @@ else
 fi
 IMAGE_NAME="$DISTRONAME-$TARGET_VERSION"
 if [ "$DEVEL_VERSION" = "devel" ] ; then
-  IMAGE_NAME="$DISTRONAME-$PROJECT.$TARGET_ARCH-$OS_VERSION-$OPENELEC_VERSION"
+  IMAGE_NAME="$DISTRONAME-$PROJECT.$TARGET_ARCH-$DEVICE-$OS_VERSION-$OPENELEC_VERSION"
 fi
 
 if [ "$PROJECT" == "imx6" -a -n "$SYSTEM" ]; then
@@ -92,6 +92,8 @@ fi
   fi
 
   echo "$TARGET_VERSION" > $INSTALL/etc/release
+
+  echo "$DEVICE" > $INSTALL/etc/device
 
 # create /etc/os-release
   echo -e "NAME=\"$DISTRONAME\"" > $INSTALL/etc/os-release
@@ -349,6 +351,7 @@ fi
           UUID_SYSTEM="$(uuidgen)" \
           UUID_STORAGE="$(uuidgen)" \
           UBOOT_SYSTEM="$UBOOT_SYSTEM" \
+          EXTRA_CMDLINE="$EXTRA_CMDLINE" \
           $SCRIPTS/mkimage
       fi
 
